@@ -6,7 +6,7 @@ each project has its own directory and its own README.
 | Project | What it is |
 |---|---|
 | [wc2bne-linux](wc2bne-linux/README.md) | Play the original game on Linux, on PvPGN servers or Battle.net |
-| [openbnet](openbnet/README.md) | A Battle.net-compatible server, based on PvPGN |
+| [openbnet-server](openbnet-server/README.md) | A Battle.net-compatible server, based on PvPGN |
 | [wc2bne-wasm](wc2bne-wasm/README.md) | The original game in a browser (planning) |
 
 `.vendor/` is git-ignored and holds third-party files.

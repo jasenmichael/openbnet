@@ -6,7 +6,7 @@ README, docs and tests. **Read the project's AGENTS.md before working in it.**
 | Project | Agent instructions |
 |---|---|
 | `wc2bne-linux/` | [wc2bne-linux/AGENTS.md](wc2bne-linux/AGENTS.md) |
-| `openbnet/` | [openbnet/AGENTS.md](openbnet/AGENTS.md) |
+| `openbnet-server/` | [openbnet-server/AGENTS.md](openbnet-server/AGENTS.md) |
 | `wc2bne-wasm/` | [wc2bne-wasm/AGENTS.md](wc2bne-wasm/AGENTS.md) |
 
 - Keep everything specific to one project inside its directory. Only monorepo-wide files belong here.

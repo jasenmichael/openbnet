@@ -1,0 +1,23 @@
+openbnet
+Licensed under the GNU General Public License, version 3 or any later version. See LICENSE.
+
+openbnet is based on PvPGN, https://github.com/pvpgn/pvpgn-server, version 1.99.7.2.1-PRO (commit 9cd173f), which is under
+the GNU General Public License, version 2 or any later version. It was rewritten in Rust and changed in 2026.
+
+Translated, with their authors' notices in the files:
+  src/xsha1.rs          from src/common/bnethash.cpp
+  src/ladder.rs         from src/bnetd/ladder_calc.cpp
+
+Copied:
+  assets/versions.json  conf/versioncheck.json.in
+
+Written after PvPGN's behavior, with some of its messages, defaults and small details:
+  src/bncs.rs, src/hub.rs, src/command.rs, src/text.rs, src/irc.rs, src/files.rs, src/udp.rs, src/versions.rs
+  mainly from src/bnetd/{handle_bnet,account,channel,command,connection,file,game,irc,message,versioncheck}.cpp
+
+Copyright holders named in those PvPGN files include Mark Baysinger, Ross Combs, Rob Crittenden, Marco Ziech, Descolada,
+D.Moreaux, Dizzy, Onlyer, Gianluigi Tiesi, CreepLord, Bryan Biedenkapp and Pelish. All its contributors:
+https://github.com/pvpgn/pvpgn-server/blob/master/CREDITS
+
+No file from a Blizzard game is included. Warcraft, StarCraft, Diablo and Battle.net are trademarks of Blizzard
+Entertainment, which has no connection with this project.

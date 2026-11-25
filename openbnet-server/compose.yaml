@@ -1,0 +1,60 @@
+# docker compose up -d --build
+# See docs/DEPLOYMENT.md#docker-compose. Host networking needs Linux.
+name: openbnet
+
+services:
+  openbnet:
+    build: .
+    image: openbnet
+    # Must own the data folder. Set OPENBNET_UID and OPENBNET_GID, here or in .env, if yours aren't 1000.
+    user: "${OPENBNET_UID:-1000}:${OPENBNET_GID:-1000}"
+    # So that the server sees players' real addresses.
+    network_mode: host
+    volumes:
+      - "${OPENBNET_DIR:-./data}:/data"
+    restart: unless-stopped
+    stop_grace_period: 30s
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "openbnet", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options: { max-size: 10m, max-file: "5" }
+
+  # Web API through a Cloudflare Tunnel; it can't carry games. docker compose --profile tunnel up -d
+  cloudflared:
+    profiles: [tunnel]
+    image: cloudflare/cloudflared:2026.10.7
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: "${TUNNEL_TOKEN:-}"
+    network_mode: host
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  # Games with friends on your tailnet, if this computer isn't on it already. docker compose --profile tailscale up -d
+  tailscale:
+    profiles: [tailscale]
+    image: tailscale/tailscale:stable
+    environment:
+      TS_AUTHKEY: "${TS_AUTHKEY:-}"
+      TS_HOSTNAME: openbnet
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_USERSPACE: "false"
+    volumes:
+      - tailscale:/var/lib/tailscale
+    devices: [/dev/net/tun]
+    cap_add: [NET_ADMIN, NET_RAW]
+    network_mode: host
+    restart: unless-stopped
+
+volumes:
+  tailscale:
