@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# wc2bne: run Warcraft II: Battle.net Edition on Linux. Behavior: docs/SPEC.md.
+set -euo pipefail
+shopt -s inherit_errexit
+
+WC2BNE_ROOT=$(dirname "$(readlink -f "$0")")
+for part in util help config editions installer sandbox registry gateways display deps lock cli; do
+  # shellcheck source=/dev/null
+  . "$WC2BNE_ROOT/lib/$part.sh"
+done
+
+main "$@"

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Stand-in for the network: serves $STUB_WEB/<host>/<path>, and fails like curl -f for anything else.
+while [ $# -gt 0 ]; do
+  case $1 in
+    -o) out=$2; shift;;
+    https://*) url=${1#https://};;
+  esac
+  shift
+done
+[ -f "$STUB_WEB/$url" ] || { echo "curl: (22) 404" >&2; exit 22; }
+printf '\r#####      50.0%%\r########## 100.0%%\n' >&2
+cp "$STUB_WEB/$url" "$out"

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+mkdir -p "$WINEPREFIX/drive_c/windows" "$WINEPREFIX/dosdevices"
+ln -sfn ../drive_c "$WINEPREFIX/dosdevices/c:"; ln -sfn / "$WINEPREFIX/dosdevices/z:"

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Stand-in for Wine: a fake installer, registry and game.
+# save_registry  Writes user.reg the way Wine does, from the fake registry.
+save_registry() {
+  local f n t d
+  { printf 'WINE REGISTRY Version 2\n\n[Software\\\\Battle.net\\\\Configuration] 1764000000\n#time=1dc5e\n'
+    for f in "$reg"/*; do
+      [ -f "$f" ] || continue
+      n=${f##*/}; t=$(tr -d '\r' <"$f" | sed 's/^    .*    \(REG_[A-Z_]*\)    .*/\1/'); d=$(tr -d '\r' <"$f" | sed 's/^    .*    REG_[A-Z_]*    //')
+      case $t in
+        REG_DWORD) printf '"%s"=dword:%08x\n' "$n" "$d";;
+        REG_MULTI_SZ) printf '"%s"=str(7):"%s"\n' "$n" "$(printf %s "$d" | sed 's/\\0\([0-9]\)/\\000\1/g; s/$/\\0/')";;
+      esac
+    done
+    printf '\n[Software\\\\Other]\n"Game Data Port"=dword:00000001\n'; } >"$WINEPREFIX/user.reg"
+}
+reg=$WINEPREFIX/fake-registry; war2=$WINEPREFIX/drive_c/war2
+case $1 in
+  reg)
+    op=$2 key=$3; shift 3; mkdir -p "$reg"
+    while [ $# -gt 0 ]; do case $1 in /v) v=$2; shift;; /t) t=$2; shift;; /s) s=$2; shift;; /d) d=$2; shift;; esac; shift; done
+    case $op in
+      add) [ "$t" != REG_MULTI_SZ ] || d=${d//"$s"/'\0'}; [ "$t" != REG_DWORD ] || d=$(printf 0x%x "$d"); printf '    %s    %s    %s\r\n' "$v" "$t" "$d" >"$reg/$v";;
+      delete) [ -e "$reg/$v" ] || exit 1; rm "$reg/$v";;
+      query) if [ -n "${v:-}" ]; then [ -e "$reg/$v" ] || exit 1; printf '%s\r\n' "$key"; cat "$reg/$v"
+             else printf '%s\r\n' "$key"; cat "$reg"/* 2>/dev/null; fi;;
+    esac; save_registry;;
+  *setup.exe)
+    [ -z "${STUB_NET:-}" ] || { echo "installer must run offline" >&2; exit 96; }
+    cp "$STUB_ROOT/home/box/setup.exe" "$STUB_LOG/ran"
+    printf '%s\n' "$@" >"$STUB_LOG/setup-args"
+    mkdir -p "$war2/Maps/Ladder" "$reg"
+    case $* in *'program\gog'*) b=gog;; *) b=lc;; esac
+    echo "exe $b" >"$war2/Warcraft II BNE.exe"; echo storm >"$war2/storm.dll"; echo snp >"$war2/battle.snp"
+    echo stock >"$war2/Maps/Stock.pud"; echo ladder >"$war2/Maps/Ladder/L.pud"
+    printf '[ddraw]\r\nWindowed=No\r\nShowWindowFrame=Yes\r\nPosX=-32000\r\nPosY=-32000\r\n' >"$war2/war2_ddraw.ini"
+    printf '    Battle.net gateways    REG_MULTI_SZ    2000\\001\\0one.example\\0-3\\0One\\0two.example\\00\\0Two Server\r\n' >"$reg/Battle.net gateways"; save_registry;;
+  explorer|'Warcraft II BNE.exe')
+    { echo "args=$*"; echo "display=$DISPLAY"; echo "net=${STUB_NET:-}"; echo "dir=$(ls)"; echo "locks=$(ls -l /proc/$$/fd | grep -c /.locks/)"; tr -d '\r' <"$war2/war2_ddraw.ini"; } >"$STUB_LOG/played"
+    for i in {1..200}; do [ -e "$STUB_LOG/keep-running" ] || break; sleep 0.05; done;;
+  *) echo "stub wine: unexpected $*" >&2; exit 98;;
+esac

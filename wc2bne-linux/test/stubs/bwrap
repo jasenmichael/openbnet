@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Stand-in for the sandbox: no isolation. Recreates the /home/box part of the sandbox under
+# $STUB_ROOT with links, then runs the inner command there with the stand-in wine.
+printf '%s\n' "$@" >>"$STUB_LOG/bwrap"; echo -- >>"$STUB_LOG/bwrap"
+R=$STUB_ROOT/$$; mkdir -p "$R/home/box"; made=(); envs=(PATH="$PATH" STUB_LOG="$STUB_LOG" STUB_ROOT="$R")
+box() { printf %s "${1//\/home\/box/$R/home/box}"; }
+while [ $# -gt 0 ]; do
+  case $1 in
+    --bind|--ro-bind|--ro-bind-try|--dev-bind-try)
+      case $3 in /home/box) rm -rf "$R/home/box"; ln -s "$2" "$R/home/box";;
+        /home/box/*) d=$(box "$3"); mkdir -p "$(dirname "$d")"; [ ! -d "$d" ] || rmdir "$d"; ln -s "$2" "$d"; made+=("$d");; esac; shift 3;;
+    --setenv) [ "$2" = PATH ] || envs+=("$2=$(box "$3")"); shift 3;;
+    --symlink) shift 3;;
+    --proc|--dev|--tmpfs|--dir) shift 2;;
+    --chdir) cd "$(box "$2")" || exit 97; shift 2;;
+    --share-net) envs+=(STUB_NET=1); shift;;
+    --*) shift;;
+    *) break;;
+  esac
+done
+env -i "${envs[@]}" "$@"; rc=$?
+cd /
+for ((i=${#made[@]}-1; i>=0; i--)); do [ ! -L "${made[i]}" ] || rm "${made[i]}"; done
+exit $rc
