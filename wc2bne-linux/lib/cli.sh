@@ -28,6 +28,7 @@ cmd_install() {
   if [ "$edition" = official ]; then
     reg_set_list "$data" "$edition" "$GW_OVERRIDE" 2000 01 connect-forever.classic.blizzard.com 8 'Global (GoG)'
   fi
+  record_files "$data" "$edition"   # last: it marks the edition as installed
   if [ -n "$porcelain" ]; then report "$fd" step=done; else echo "installed: $edition"; fi
 }
 

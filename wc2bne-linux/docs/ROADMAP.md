@@ -4,7 +4,7 @@
 
 Data folder, editions, shared maps, dependency checks, the full command set, and install from source.
 
-## Next: desktop GUI
+## Done: desktop GUI
 
 A separate project, `wc2bne-gui/`, in Python + GTK 3, chosen as the lightest option that gives a real
 window on most distros. It calls only the `wc2bne` command and its `--porcelain` output, so the command
@@ -16,7 +16,7 @@ line stays fully usable alone. It should cover:
 - settings (edition, window mode, UDP port)
 - choosing the data folder
 
-The commands it needs are done. Order: Play tab, Servers tab, Settings tab and menu entry. Design: DECISIONS.md, 17.
+Built in [wc2bne-gui](../../wc2bne-gui/README.md), 2026-11-25. Not yet tried on a real desktop. Design: DECISIONS.md, 17.
 
 ## Later: install methods
 

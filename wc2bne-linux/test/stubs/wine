@@ -32,6 +32,7 @@ case $1 in
     mkdir -p "$war2/Maps/Ladder" "$reg"
     case $* in *'program\gog'*) b=gog;; *) b=lc;; esac
     echo "exe $b" >"$war2/Warcraft II BNE.exe"; echo storm >"$war2/storm.dll"; echo snp >"$war2/battle.snp"
+    [ ! -e "$STUB_LOG/stop-install" ] || exit 1
     echo stock >"$war2/Maps/Stock.pud"; echo ladder >"$war2/Maps/Ladder/L.pud"
     printf '[ddraw]\r\nWindowed=No\r\nShowWindowFrame=Yes\r\nPosX=-32000\r\nPosY=-32000\r\n' >"$war2/war2_ddraw.ini"
     printf '    Battle.net gateways    REG_MULTI_SZ    2000\\001\\0one.example\\0-3\\0One\\0two.example\\00\\0Two Server\r\n' >"$reg/Battle.net gateways"; save_registry;;

@@ -25,8 +25,8 @@ edition_components() {
   printf '%s\n' "$c"
 }
 
-# is_installed DATA EDITION  Succeeds when the game is there. Reads files.
-is_installed() { [ -f "$(game_dir "$1" "$2")/$EXE" ]; }
+# is_installed DATA EDITION  Succeeds when the game is there and its install finished. Reads files.
+is_installed() { [ -f "$(game_dir "$1" "$2")/$EXE" ] && [ -s "$(checksums_file "$1" "$2")" ]; }
 
 # copy_missing FROM TO  Copies files that TO doesn't have yet, never overwriting. Writes files.
 copy_missing() {

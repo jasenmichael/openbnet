@@ -65,15 +65,16 @@ run_installer() {
   local data=$1 edition=$2 installer=$3 fd=$4 game wine log
   game=$(game_dir "$data" "$edition") wine=$(wine_dir "$data" "$edition") log=$(wine_dir "$data" "$edition")/install.log
   mkdir -p "$wine" "$(maps_dir "$data")"; chmod 700 "$game"
+  if [ -L "$game/Maps" ]; then rm "$game/Maps"; fi   # left by an install that stopped late; leads to the user's maps
+  rm -f "$(checksums_file "$data" "$edition")"   # until the install finishes, the edition isn't installed
   report "$fd" step=prepare
   box "$data" "$edition" offline wineboot -i
   report "$fd" step=install
   box "$data" "$edition" offline --installer "$installer" wine 'Z:\home\box\setup.exe' /VERYSILENT /SUPPRESSMSGBOXES \
     /NORESTART /NOICONS /LANG=en '/DIR=C:\war2' "/COMPONENTS=$(edition_components "$edition")" \
     '/LOG=Z:\home\box\.wine\install.log' || die "$E_FAILED" "installer failed; see $log"
-  is_installed "$data" "$edition" || die "$E_FAILED" "installer finished but the game is missing; see $log"
+  [ -f "$game/$EXE" ] || die "$E_FAILED" "installer finished but the game is missing; see $log"
   report "$fd" step=finish
   share_maps "$data" "$edition"
-  record_files "$data" "$edition"
   rm -f "$wine/dosdevices/z:"   # it maps the whole sandbox; the game doesn't need it
 }

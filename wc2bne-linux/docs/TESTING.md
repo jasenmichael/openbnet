@@ -4,7 +4,7 @@ Last updated 2026-11-25.
 
 ## Automated
 
-`bats test`: 103 tests through the command line, with stand-ins for the sandbox, Wine, network, Xwayland, xrandr,
+`bats test`: 105 tests through the command line, with stand-ins for the sandbox, Wine, network, Xwayland, xrandr,
 xdg-open, sudo and package managers. `PATH` holds only those and basic tools. The real `sha256sum` runs. They don't
 cover real Wine, isolation, displays or downloads.
 
@@ -23,6 +23,7 @@ On Pop!_OS 24.04, Wine 9.0, in a throwaway data folder.
 | Two `community` clients: host, join, map download into `Maps/Download`, match over a minute, in-game chat | Pass |
 | Real game running: gateway change and second `play` refused; `set`, odd characters and `uninstall` work | Pass |
 | On the owner's COSMIC desktop | Owner reports "it works", 2026-11-25; window, cursor, fullscreen, sound and Exit not itemized |
+| Install cancelled partway through the GUI: edition absent, nothing left running, installs again | Pass |
 | In-game Exit during a match; launcher exits 0 | Pass |
 | Nested display in headless Weston, main menu, both modes, cursor visible in the nested display | Pass |
 | Real download from each URL, with the earlier single-file script | Pass |

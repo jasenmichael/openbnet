@@ -39,8 +39,8 @@ It carries packets only; the game still runs in the tab.
 | Finding | Basis |
 |---|---|
 | Login and chat: TCP 6112. Match data: UDP between players, port from `Game Data Port` | `wc2bne-linux` notes |
-| PvPGN and openbnet take a player's UDP address from the source of their UDP packet | Checked: `handle_udp.cpp`, `openbnet/src/udp.rs` |
-| A client can also state its port (0x45), or its IP and port (0x1B), over TCP; both servers believe it | Checked: `handle_bnet.cpp`, `openbnet/src/bncs.rs` |
+| PvPGN and openbnet take a player's UDP address from the source of their UDP packet | Checked: `handle_udp.cpp`, `openbnet-server/src/udp.rs` |
+| A client can also state its port (0x45), or its IP and port (0x1B), over TCP; both servers believe it | Checked: `handle_bnet.cpp`, `openbnet-server/src/bncs.rs` |
 | Which of those W2BN sends isn't known | Open |
 | Stock PvPGN: `max_conns_per_IP = 0` (off). Other operators may limit it | Checked |
 | Wisp has no bind or listen, so it can't receive from unknown peers | Reported (protocol v1.2) |

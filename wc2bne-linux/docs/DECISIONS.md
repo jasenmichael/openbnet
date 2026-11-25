@@ -109,4 +109,8 @@ may use an edition. Reading parses Wine's `user.reg`, because starting Wine took
 
 `wc2bne-gui/`: one GTK 3 window with Play, Servers and Settings tabs, using only the command line. Missing programs are
 installed with `pkexec` after showing the commands. It stays open while the game runs, uses the system theme and no
-Blizzard artwork, and is tested as a real window against a stand-in `wc2bne`.
+Blizzard artwork, and is tested as a real window against a stand-in `wc2bne`, driven through the accessibility interface.
+
+## 18. Recorded checksums mark an edition as installed
+
+They are written last, so a cancelled or failed install doesn't count as installed and can be run again.

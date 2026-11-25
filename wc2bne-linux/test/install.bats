@@ -127,3 +127,18 @@ setup_more() { KEPT=$DATA/War2Combat46_en.exe; mkdir -p "$DATA"; }
   [ "$status" -eq 0 ]
   [ "$output" = $'step=download\npercent=50\npercent=100\nstep=prepare\nstep=install\nstep=finish\nstep=done' ]
 }
+
+@test "an install that stopped partway doesn't count as installed, and can be done again" {
+  printf good >"$KEPT"
+  touch "$STUB_LOG/stop-install"
+  run "$WC2BNE" install
+  [ "$status" -eq 1 ]
+  [ -e "$DATA/community/Warcraft II BNE.exe" ]
+  run "$WC2BNE" status --porcelain
+  [[ $output == *community=absent* ]]
+  rm "$STUB_LOG/stop-install"
+  run "$WC2BNE" install
+  [ "$status" -eq 0 ]
+  run "$WC2BNE" status --porcelain
+  [[ $output == *community=installed* ]]
+}

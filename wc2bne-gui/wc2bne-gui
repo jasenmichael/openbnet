@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""Desktop window for wc2bne."""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+
+if os.geteuid() == 0:
+    print("wc2bne-gui: Don't run this as root. It asks for your password when it needs to.", file=sys.stderr)
+    sys.exit(1)
+
+try:
+    import gi
+    gi.require_version("Gtk", "3.0")
+except (ImportError, ValueError):
+    print("wc2bne-gui: Python's GTK 3 support is missing. Install python3-gi and gir1.2-gtk-3.0 (Debian, Ubuntu), "
+          "python3-gobject and gtk3 (Fedora) or python-gobject and gtk3 (Arch).", file=sys.stderr)
+    sys.exit(4)
+
+from wc2bne_gui.main import main  # noqa: E402
+
+sys.exit(main(sys.argv))

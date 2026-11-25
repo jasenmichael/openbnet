@@ -101,9 +101,9 @@ Refused if already installed or with no display. Installer, in order:
    checksum moves on to the next. A mismatched kept file becomes `.bad`, only after a good download.
 
 No installer runs without a matching SHA-256. It runs silently, offline, in the sandbox, into `C:\war2`. Then the
-edition's maps are merged into the shared maps without overwriting, replaced by a relative link, the checked files'
-checksums are recorded, and `z:` is removed. `official` also gets an override list with only Blizzard's server.
-Deleting an edition's folder also uninstalls it.
+edition's maps are merged into the shared maps without overwriting and replaced by a relative link, and `z:` is removed.
+`official` also gets an override list with only Blizzard's server. Last, the checked files' checksums are recorded: until
+then the edition isn't installed, so a stopped install can be run again. Deleting an edition's folder also uninstalls it.
 
 | | `community` | `official` |
 |---|---|---|

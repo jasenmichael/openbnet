@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Made for this project: a shield with crossed lines, no game artwork. GPL-3.0-or-later. -->
+  <path d="M32 4 L56 12 V30 C56 46 45 56 32 60 C19 56 8 46 8 30 V12 Z" fill="#5b3a1e" stroke="#2b1a0c" stroke-width="3"/>
+  <path d="M32 10 L50 16 V30 C50 42 42 50 32 54 C22 50 14 42 14 30 V16 Z" fill="#c8a24a"/>
+  <path d="M21 20 L43 44 M43 20 L21 44" stroke="#2b1a0c" stroke-width="5" stroke-linecap="round"/>
+</svg>

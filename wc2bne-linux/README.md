@@ -43,6 +43,8 @@ To uninstall, remove the link and this folder. Packages (`.deb`, AppImage, Flatp
 
 ## Using it
 
+For a window instead of commands, see [wc2bne-gui](../wc2bne-gui/README.md).
+
 ```sh
 wc2bne play                     # fullscreen
 wc2bne play --window            # 640x480 window

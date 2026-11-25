@@ -38,3 +38,13 @@ setup_more() { mkdir -p "$DATA"; printf good >"$DATA/War2Combat46_en.exe"; }
   run "$WC2BNE" exec -- cat war2/Maps/Stock.pud
   [ "$output" = stock ]
 }
+
+@test "installing again after one that stopped late doesn't overwrite shared maps" {
+  printf good >"$DATA/War2Combat46_en.exe"
+  "$WC2BNE" install
+  rm "$DATA/.checksums/community"          # as if it had stopped just before the end
+  echo mine >"$DATA/Maps/Stock.pud"
+  run "$WC2BNE" install
+  [ "$status" -eq 0 ]
+  [ "$(cat "$DATA/Maps/Stock.pud")" = mine ]
+}
