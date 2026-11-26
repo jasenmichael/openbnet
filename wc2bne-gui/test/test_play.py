@@ -209,3 +209,13 @@ class Play(WindowTest):
         self.release("config set")
         self.wait_ran("config", "set", "mode", "fullscreen")
         self.assertTrue(self.chosen("Fullscreen"))
+
+    def test_a_window_made_too_small_still_works(self):
+        self.open()
+        self.wait_enabled("Play")
+        self.squeeze(200, 150)
+        for tab in ("Servers", "Settings", "Play"):
+            self.tab(tab)
+            self.wait_checks(1)
+        self.click("Play")
+        self.wait_ran("play", "--edition", "community", "--fullscreen")

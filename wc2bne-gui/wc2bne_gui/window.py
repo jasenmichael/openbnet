@@ -29,19 +29,19 @@ class Window(Gtk.ApplicationWindow):
         self.changes = 0  # choices made by the player
         self.to_save = []  # choices being saved, one at a time, as (setting, value)
         self.showing = False  # true while controls are set from the state, not by the player
-        tabs = Gtk.Notebook()
+        tabs = Gtk.Notebook(scrollable=True)  # the tab row too, when the window is narrow
         self.add(tabs)
         play = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, margin=18)
-        tabs.append_page(play, Gtk.Label(label="Play"))
+        tabs.append_page(scrolling(play), Gtk.Label(label="Play"))
         row = Gtk.Box(spacing=36)
         play.add(row)
         self.servers = Servers(launcher, self.ask)
-        tabs.append_page(self.servers, Gtk.Label(label="Servers"))
-        tabs.connect("switch-page", lambda tabs, page, number: page is self.servers and self.servers.load(self.edition()))
+        tabs.append_page(scrolling(self.servers), Gtk.Label(label="Servers"))
+        tabs.connect("switch-page", lambda tabs, page, number: number == 1 and self.servers.load(self.edition()))
         self.settings = Settings(launcher, self.ask, self.refresh, self.mode,
                                  lambda: self.status is None and self.status_problem[0] == explain(2))
         self.settings.check_programs = self.check_programs
-        tabs.append_page(self.settings, Gtk.Label(label="Settings"))
+        tabs.append_page(scrolling(self.settings), Gtk.Label(label="Settings"))
         self.editions = self.radios(row, "Edition", "edition", EDITIONS)
         self.modes = self.radios(row, "Display", "mode", MODES)
         self.play = Gtk.Button(label="Play")
@@ -330,3 +330,10 @@ class Window(Gtk.ApplicationWindow):
                     buttons[status[setting]].set_active(True)
             self.showing = False
         self.update()
+
+
+def scrolling(page):
+    """A tab's page that scrolls when the window is made smaller than it, as tiling desktops may do."""
+    scroller = Gtk.ScrolledWindow(propagate_natural_width=True, propagate_natural_height=True)
+    scroller.add(page)
+    return scroller

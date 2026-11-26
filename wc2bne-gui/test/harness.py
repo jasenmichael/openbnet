@@ -52,6 +52,32 @@ def wait_for(check, what):
         time.sleep(0.02)
 
 
+def x_windows(title, act):
+    """Calls act(x, display, window) for each top-level X window with this title. -> how many."""
+    x = ctypes.CDLL("libX11.so.6")
+    ID = ctypes.c_ulong
+    x.XOpenDisplay.restype = ctypes.c_void_p
+    x.XDefaultRootWindow.argtypes = [ctypes.c_void_p]
+    x.XDefaultRootWindow.restype = ID
+    x.XQueryTree.argtypes = [ctypes.c_void_p, ID] + [ctypes.c_void_p] * 4
+    x.XFetchName.argtypes = [ctypes.c_void_p, ID, ctypes.POINTER(ctypes.c_char_p)]
+    x.XResizeWindow.argtypes = [ctypes.c_void_p, ID, ctypes.c_uint, ctypes.c_uint]
+    x.XCloseDisplay.argtypes = [ctypes.c_void_p]
+    display = x.XOpenDisplay(None)
+    root, parent, count = ID(), ID(), ctypes.c_uint()
+    children = ctypes.POINTER(ID)()
+    x.XQueryTree(display, x.XDefaultRootWindow(display), ctypes.byref(root), ctypes.byref(parent),
+                 ctypes.byref(children), ctypes.byref(count))
+    found = 0
+    for i in range(count.value):
+        name = ctypes.c_char_p()
+        if x.XFetchName(display, children[i], ctypes.byref(name)) and name.value == title.encode():
+            act(x, display, children[i])
+            found += 1
+    x.XCloseDisplay(display)
+    return found
+
+
 def close_window(title):
     """Asks the top-level window with this title to close, as a window manager would (there is none here)."""
     x = ctypes.CDLL("libX11.so.6")
@@ -303,6 +329,11 @@ class WindowTest(unittest.TestCase):
 
     def wait_text(self, text):
         wait_for(lambda: any(text in shown for shown in self.shown()), lambda: "text %r; showing %r" % (text, self.shown()))
+
+    def squeeze(self, width, height):
+        """Makes the window smaller than it asks for, as a tiling window manager may."""
+        self.window()
+        assert x_windows(WINDOW_TITLE, lambda x, d, w: x.XResizeWindow(d, w, width, height))
 
     def close(self):
         """Closes the window like its X button does."""
