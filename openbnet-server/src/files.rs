@@ -51,8 +51,12 @@ impl Files {
         let mut path = self.directory.join(name);
         let mut meta = tokio::fs::symlink_metadata(&path).await;
         if meta.is_err() {
-            path = self.directory.join(fallback(name)?);
+            let text = fallback(name)?;
+            path = self.directory.join(text);
             meta = tokio::fs::symlink_metadata(&path).await;
+            if meta.is_err() {
+                return built_in(text);
+            }
         }
         let meta = meta.ok()?;
         if !meta.is_file() || meta.len() > MAX_FILE {
@@ -74,6 +78,18 @@ impl Files {
         let digest: String = Sha256::digest(data).iter().map(|byte| format!("{byte:02x}")).collect();
         KNOWN.contains(&digest.as_str())
     }
+}
+
+/// Texts a fresh server has, so that players can sign up without the operator adding files. Games wait for these
+/// forever when they get nothing.
+fn built_in(text: &str) -> Option<File> {
+    let data: &[u8] = match text {
+        "termsofservice.txt" => b"This server is run by its operator, who may change or end it, and remove accounts, at any time.\r\nBe kind to other players.\r\n",
+        "newaccount.txt" => b"Choose a name and a password. Keep the password to yourself: there is no way to recover it here.\r\n",
+        _ => return None,
+    };
+    // A fixed time, so games download each text once.
+    Some(File { data: data.to_vec(), modified: 133_000_000_000_000_000 })
 }
 
 /// Games ask for texts by language, such as `tos_USA.txt`. One file can serve them all.
@@ -168,7 +184,17 @@ mod tests {
         assert_eq!(files.read("tos_USA.txt").await.unwrap().data, b"terms");
         std::fs::write(dir.path().join("tos_DEU.txt"), b"Bedingungen").unwrap();
         assert_eq!(files.read("tos_DEU.txt").await.unwrap().data, b"Bedingungen");
-        assert!(files.read("newaccount-enUS.txt").await.is_none());
+    }
+
+    #[tokio::test]
+    async fn a_fresh_server_has_sign_up_texts() {
+        let dir = tempfile::tempdir().unwrap();
+        let files = files(dir.path());
+        for name in ["tos_USA.txt", "termsofservice-enUS.txt", "newaccount-enUS.txt"] {
+            let file = files.read(name).await.unwrap_or_else(|| panic!("{name}"));
+            assert!(!file.data.is_empty() && file.modified > 0, "{name}");
+        }
+        assert!(files.read("missing.txt").await.is_none());
     }
 
     #[test]

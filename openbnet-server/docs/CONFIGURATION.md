@@ -39,7 +39,7 @@ All optional:
 |---|---|
 | `ver-IX86-1.mpq`, `IX86ver1.mpq` | [Version checks](#version-checks) |
 | `icons.bni` | Chat icons. Games have their own |
-| `termsofservice.txt`, `newaccount.txt` | Shown when signing up |
+| `termsofservice.txt`, `newaccount.txt` | Shown when signing up. Without them, short built-in texts are sent |
 | Banners | `[[ad]]` |
 
 ## Version checks

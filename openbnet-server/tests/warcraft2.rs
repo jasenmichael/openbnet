@@ -364,3 +364,13 @@ async fn hostile_packets_do_no_harm() {
     }
     assert!(Client::connect(address).await.create("alive", "secret").await);
 }
+
+#[tokio::test]
+async fn a_fresh_server_sends_the_sign_up_texts() {
+    let (address, _) = server(|_| {}).await;
+    for name in ["tos_USA.txt", "newaccount-enUS.txt"] {
+        let reply = Client::download(address, name).await;
+        let header = usize::from(u16::from_le_bytes([reply[0], reply[1]]));
+        assert!(reply.len() > header, "{name}: no text after the header");
+    }
+}
