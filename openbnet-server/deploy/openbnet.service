@@ -1,0 +1,22 @@
+[Unit]
+Description=openbnet
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/openbnet --data /var/lib/openbnet serve
+ExecReload=/bin/kill -HUP $MAINPID
+User=openbnet
+Group=openbnet
+StateDirectory=openbnet
+Restart=on-failure
+LimitNOFILE=8192
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

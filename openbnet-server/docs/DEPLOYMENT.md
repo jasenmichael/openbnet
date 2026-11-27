@@ -1,6 +1,7 @@
 # Running a server for others
 
-Start with the [README](../README.md). Settings are in [CONFIGURATION.md](CONFIGURATION.md).
+Start with the [README](../README.md). Settings are in [CONFIGURATION.md](CONFIGURATION.md). **For a VPS, follow
+[VPS.md](VPS.md)**: step by step, with or without Docker.
 
 ## The quick way
 
@@ -184,7 +185,7 @@ sudo useradd --system --home /var/lib/openbnet openbnet
 sudo install -d -o openbnet -g openbnet /var/lib/openbnet/files
 ```
 
-`/etc/systemd/system/openbnet.service`:
+`/etc/systemd/system/openbnet.service`, also in [`deploy/openbnet.service`](../deploy/openbnet.service):
 
 ```ini
 [Unit]

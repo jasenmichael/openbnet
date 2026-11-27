@@ -68,6 +68,9 @@ These found two problems, both fixed: a listen queue of 128 overflowed, and a fu
 
 ### Deployment
 
+2026-11-26, [VPS.md](VPS.md) without Docker in a fresh Ubuntu 24.04 container, cloning from GitHub: build (2m48s on 2 CPUs, 690 MB
+peak), setup, serve, `health`, administrator account. The service itself and the firewall commands weren't run there.
+
 2026-11-25, as written in [DEPLOYMENT.md](DEPLOYMENT.md): Caddy 2.11.9 in front (API and WebSocket work, `/api/admin` blocked),
 `cloudflared` 2026.10.7's own check of the tunnel rules, `systemd-analyze verify` on the unit, and the container with host
 networking and `--user`, and Docker Compose: setup, healthy, reload, gentle stop. Not run: a live tunnel, Tailscale, a certificate, the installed service, published container ports, games in a
@@ -94,6 +97,7 @@ Again on 2026-11-25, in a network namespace of their own:
 |---|---|
 | Empty: the check is skipped | Log in, chat, host: pass |
 | Empty, default settings, two clients: melee match, quit as a draw, result stored; server stopped with both connected | Pass |
+| Empty: New Account in the game shows the built-in terms; account made, logged in | Pass |
 | Only `ver-IX86-1.mpq` | Reaches login: pass |
 | `ver-IX86-1.mpq` with two bytes of its signature changed | Refused by the game |
 
@@ -105,4 +109,3 @@ The community build reports checksum `0x270dfc2b`, not PvPGN's `0xb52bad87` for 
 - The `official` Warcraft II build, any other game, a match with a winner and loser, and a ladder match
 - The internet, NAT and `[network]` settings with real games
 - Real IRC clients, bots and browsers
-- Terms of service text in the real game (added after the run above)

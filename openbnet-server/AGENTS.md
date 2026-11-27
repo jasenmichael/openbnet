@@ -23,6 +23,7 @@ what comes next in [docs/ROADMAP.md](docs/ROADMAP.md). For people running a serv
 | `src/setup.rs`, `src/health.rs` | The `setup` and `health` commands |
 | `src/store.rs`, `migrations/` | Database |
 | `src/xsha1.rs`, `src/versions.rs`, `src/wire.rs` | Password hash, version checks, packet fields |
+| `compose.yaml`, `Dockerfile`, `deploy/` | Containers and the systemd service ([docs/VPS.md](docs/VPS.md)) |
 | `assets/` | Built into the program: default settings and PvPGN's version list |
 | `data/` | Git-ignored. The owner's running server lives here: don't change it or test in it; use `--data` |
 | `tests/` | Simulated clients, comparison with PvPGN, load |

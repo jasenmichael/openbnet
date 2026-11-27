@@ -61,7 +61,8 @@ The rest is optional.
 | You want | Do |
 |---|---|
 | To play with others on your network | Use this computer's address, such as `192.168.1.10`, as the gateway instead of `127.0.0.1` |
-| Players over the internet, or a domain | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| A VPS, such as a DigitalOcean droplet | [docs/VPS.md](docs/VPS.md), with or without Docker |
+| Players over the internet at home, or a domain | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
 | Cloudflare | A tunnel carries only the web API, not games: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#cloudflare) |
 | Friends only, without opening ports | [Tailscale](docs/DEPLOYMENT.md#friends-over-tailscale) |
 | A service or a container | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md#as-a-service) |
